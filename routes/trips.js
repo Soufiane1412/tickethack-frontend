@@ -2,18 +2,25 @@ var express = require('express');
 var router = express.Router();
 const Trip = require('../models/trips');
 const moment = require('moment');
-const date_format = 'YYYY-MM-DD';
+const { checkParam } = require('../modules/checkParam');
 
 router.get('/', (req,res) => {
     // Get query parameters
     const {departure, arrival, date} = req.query;
 
+    //  Check all parameters
+    if(!checkParam(req.query,['departure', 'arrival','date'])) {
+        res.json({
+            result:  false, error: 'Missing or empty fields'
+        }); 
+        return; 
+    }
+
     // Get start day
     let startDay = moment.utc(date).startOf('day').toISOString();
-
     //Get end day
     let endDay = moment.utc(date).add(1, 'days').startOf('day').toISOString();
-    
+
     //Build BDD Query
     Trip.find({
         departure:departure, 
