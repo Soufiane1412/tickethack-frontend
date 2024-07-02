@@ -1,14 +1,9 @@
 const mongoose = require('mongoose');
 
-const tripDateSchema = mongoose.Schema ({
-    $date:Date,
-});
-
 const tripSchema = mongoose.Schema ({
-
     departure:String,
     arrival:String,
-    date:[tripDateSchema],
+    date:Date,
     price:Number,
 });
 
