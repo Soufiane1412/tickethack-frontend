@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-const tripDateSchema = mongoose.schema ({
-
+const tripDateSchema = mongoose.Schema ({
     $date:Date,
 });
 
@@ -9,9 +8,9 @@ const tripSchema = mongoose.Schema ({
 
     departure:String,
     arrival:String,
-    date:[newTripDate],
+    date:[tripDateSchema],
     price:Number,
 });
 
 const Trip = mongoose.model('trips',tripSchema);
-model.exports = Trip;
+module.exports = Trip;
