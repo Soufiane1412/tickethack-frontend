@@ -11,7 +11,7 @@ router.get('/', (req,res) => {
         results = results.filter(result=> moment(result.date).format(date_format) === newDate);
         res.json({trips:results})
     });
-
 });
+
 
 module.exports = router;
