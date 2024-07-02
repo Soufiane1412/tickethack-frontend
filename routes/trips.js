@@ -9,7 +9,11 @@ router.get('/', (req,res) => {
     Trip.find({departure:departure, arrival:arrival}).then(results =>{
         const newDate = moment(date).format(date_format);
         results = results.filter(result=> moment(result.date).format(date_format) === newDate);
-        res.json({trips:results})
+        if (results.length === 0) {
+            res.json({results:false})
+        } else {
+            res.json({results: true, trips:results})
+        }
     });
 });
 
