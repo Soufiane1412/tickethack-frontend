@@ -2,18 +2,35 @@ var express = require('express');
 var router = express.Router();
 const Trip = require('../models/trips');
 const moment = require('moment');
-const date_format = 'YYYY-MM-DD';
+const { checkParam } = require('../modules/checkParam');
 
 router.get('/', (req,res) => {
-    const {departure, arrival, date} = req.body;
-    Trip.find({departure:departure, arrival:arrival}).then(results =>{
-        const newDate = moment(date).format(date_format);
-        results = results.filter(result=> moment(result.date).format(date_format) === newDate);
-        if (results.length === 0) {
-            res.json({results:false})
-        } else {
-            res.json({results: true, trips:results})
+    // Get query parameters
+    const {departure, arrival, date} = req.query;
+
+    //  Check all parameters
+    if(!checkParam(req.query,['departure', 'arrival','date'])) {
+        res.json({
+            result:  false, error: 'Missing or empty fields'
+        }); 
+        return; 
+    }
+
+    // Get start day
+    let startDay = moment.utc(date).startOf('day').toISOString();
+    //Get end day
+    let endDay = moment.utc(date).add(1, 'days').startOf('day').toISOString();
+
+    //Build BDD Query
+    Trip.find({
+        departure:departure, 
+        arrival:arrival, 
+        date:{
+            $gt:startDay, 
+            $lt:endDay
         }
+    }).then(results =>{
+        results.length === 0 ? res.json({results:false}) : res.json({results:true, trips:results})
     });
 });
 
