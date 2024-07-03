@@ -8,12 +8,16 @@ router.post('/post/:trip', (req,res) => {
     const newCart = new Cart ({
         trip:req.params.trip,
     });
-    newCart.save().then(() => {
-        Cart.findOne().then(result => {
-            res.json({trip:result});
-        });
-    });
+    Cart.findOne();
+    if (newCart === null) {
+        newCart.save().then(result =>{
+            res.json({trip:result, trip:'trip added to your cart'})
+        })
+    } else {
+        res.json({error:result, trip:'trip already in cart'})
+    };
 });
+
 
 router.delete('/delete/:trip', (req,res) => {
     const deletedTrip = req.params.trip;
