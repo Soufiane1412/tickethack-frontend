@@ -18,14 +18,15 @@ router.get('/', (req,res) => {
 
     // Get start day
     let startDay = moment.utc(date).startOf('day').toISOString();
+   
     //Get end day
-    let endDay = moment.utc(date).add(1, 'days').startOf('day').toISOString();
+    let endDay = moment.utc(date).endOf('day').toISOString();
 
     //Build BDD Query
     Trip.find({
-        departure:departure, 
-        arrival:arrival, 
-        date:{
+        departure:{$regex:new RegExp(departure,'i')}, 
+        arrival:{$regex: new RegExp(arrival,'i')}, 
+      date:{
             $gt:startDay, 
             $lt:endDay
         }
